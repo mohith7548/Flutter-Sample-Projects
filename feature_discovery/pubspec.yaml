@@ -1,0 +1,17 @@
+name: feature_discovery
+description: A new Flutter project. featuring feature discovery
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^0.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/hotel.jpeg
