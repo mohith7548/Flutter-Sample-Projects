@@ -23,6 +23,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   ScrollController _scrollController;
+  var _icon = Icons.favorite_border;
 
   @override
   void initState() {
@@ -69,15 +70,53 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ],
           ),
-          Positioned(
-            top: 256.0,
-            right: 16.0,
-            child: FloatingActionButton(
-              onPressed: () {},
-              child: Icon(Icons.favorite),
-            ),
-          )
+          _buildFab(),
         ],
+      ),
+    );
+  }
+
+  Widget _buildFab() {
+    //starting fab position
+    final double defaultTopMargin = 256.0 - 4.0;
+    //pixels from top where scaling should start
+    final double scaleStart = 96.0;
+    //pixels from top where scaling should end
+    final double scaleEnd = scaleStart / 2;
+
+    double top = defaultTopMargin; // default top margin, -4 for exact alignment
+    double scale = 1.0;
+    if(_scrollController.hasClients) {
+      double offset = _scrollController.offset;
+      top -= offset;
+      if (offset < defaultTopMargin - scaleStart) {
+        //offset small => don't scale down
+        scale = 1.0;
+      } else if (offset < defaultTopMargin - scaleEnd) {
+        //offset between scaleStart and scaleEnd => scale down
+        scale = (defaultTopMargin - scaleEnd - offset) / scaleEnd;
+      } else {
+        //offset passed scaleEnd => hide fab
+        scale = 0.0;
+      }
+    }
+    return Positioned(
+      top: top,
+      right: 16.0,
+      child: Transform(
+        transform: Matrix4.identity()..scale(scale),
+        child: FloatingActionButton(
+          onPressed: () {
+            setState(() {
+              if (_icon == Icons.favorite_border) {
+                _icon = Icons.favorite;
+              } else if (_icon == Icons.favorite){
+                _icon = Icons.favorite_border;
+              }
+            });
+          },
+          child: Icon(_icon),
+        ),
       ),
     );
   }
