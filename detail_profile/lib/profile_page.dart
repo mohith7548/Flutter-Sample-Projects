@@ -7,7 +7,8 @@ class ProfilePage extends StatefulWidget {
   _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfilePageState extends State<ProfilePage>
+    with SingleTickerProviderStateMixin {
   final user = User(
     firstName: 'Kune',
     lastName: 'Mohith',
@@ -15,6 +16,27 @@ class _ProfilePageState extends State<ProfilePage> {
     biography:
         'Mohith Kune is a Programmer, Developer, Auntrepreneur, Linux enthusiast. He likes to Code and loves to play games like cricket. He has been coding since his college days. He is on the few artistic programmers around the world.',
   );
+  AnimationController _controller;
+  Animation _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 500),
+    );
+//    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut)
+    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller)
+      ..addListener(() => setState(() {}));
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +84,7 @@ class _ProfilePageState extends State<ProfilePage> {
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: 30.0,
+              fontSize: 30.0 * _animation.value,
             ),
           ),
           Text(
@@ -70,7 +92,7 @@ class _ProfilePageState extends State<ProfilePage> {
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: 30.0,
+              fontSize: 30.0 * _animation.value,
             ),
           ),
           const SizedBox(height: 6.0),
@@ -79,12 +101,13 @@ class _ProfilePageState extends State<ProfilePage> {
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.w300,
+              fontSize: 15.0 * _animation.value,
             ),
           ),
           Container(
             margin: const EdgeInsets.symmetric(vertical: 16.0),
-            width: 255.0,
-            height: 1.0,
+            width: 255.0 * _animation.value,
+            height: 1.0 * _animation.value,
             color: Colors.white,
           ),
           Text(
@@ -92,6 +115,7 @@ class _ProfilePageState extends State<ProfilePage> {
             style: TextStyle(
               color: Colors.white,
               height: 1.2,
+              fontSize: 14.0 * _animation.value,
             ),
           ),
         ],
@@ -106,7 +130,7 @@ class _ProfilePageState extends State<ProfilePage> {
           shape: BoxShape.circle, border: Border.all(color: Colors.white30)),
       child: CircleAvatar(
         backgroundImage: AssetImage('assets/kunemohith.jpg'),
-        radius: 55.0,
+        radius: 55.0 * _animation.value,
         backgroundColor: Colors.white30,
       ),
     );
