@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:battery/battery.dart';
 
 void main() => runApp(MyApp());
 
@@ -21,6 +22,28 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  Battery _battery = Battery();
+  int _batteryLevel;
+  BatteryState _batteryState;
+
+  @override
+  void initState() {
+    super.initState();
+    _battery.batteryLevel.then((int value) {
+      setState(() {
+        _batteryLevel = value;
+      });
+    });
+    _battery.onBatteryStateChanged.listen((BatteryState state) {
+      _battery.batteryLevel.then((int value) {
+        setState(() {
+          _batteryLevel = value;
+          _batteryState = state;
+        });
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,10 +51,14 @@ class _HomePageState extends State<HomePage> {
         title: Text('Battery Status'),
       ),
       body: Center(
-        child: Icon(
-          Icons.battery_std,
-          color: Colors.green,
-          size: 80.0,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text('Battery Leve: $_batteryLevel %'),
+            const SizedBox(height: 16.0),
+            Text('Battery State: $_batteryState'),
+          ],
         ),
       ),
     );
